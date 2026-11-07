@@ -3,6 +3,13 @@
 # Удаляем скачанные .deb-файлы
 sudo apt clean
 
+# Удаляем неиспользуемые ядра
+KREL="$(uname -r)"
+ARCH_SUFFIX="${KREL#*+rpt}"
+ARCH_NAME="${ARCH_SUFFIX#-}"
+COMMON_VER="${KREL%${ARCH_SUFFIX}}"
+dpkg -l 'linux-*' | grep '^ii' | grep -vF "$KREL" | awk '{print $2}' | grep -E 'linux-(image|headers|modules)' | grep -vxF -e "linux-image-${ARCH_NAME}" -e "linux-headers-${ARCH_NAME}" -e "linux-headers-${COMMON_VER}-common-rpi" | xargs -r sudo apt purge -y
+
 # Удаляем пакеты, установленные автоматически и ставшие ненужными
 sudo apt autoremove --purge -y
 
@@ -57,7 +64,7 @@ sudo rm -f /tmp/zero.fill
 sync
 
 # Команды Bash в текущей сессии
-history -c
+history -c && history -w
 
 # Выключаем RPi-Zero
- sudo poweroff
+ sudo powerof
