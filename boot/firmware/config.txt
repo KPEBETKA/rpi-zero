@@ -49,3 +49,5 @@ otg_mode=1
 dtoverlay=dwc2,dr_mode=host
 
 [all]
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
